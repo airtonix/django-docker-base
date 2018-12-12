@@ -1,0 +1,12 @@
+{
+    "name": "base_django_project",
+    "version": "0.0.1",
+    "scripts": {
+        "docker:build": "docker-compose -f ./docker-compose--build.yml build web",
+        "docker:run": "docker-compose run --rm",
+        "shell": "npm run docker:run -- web /bin/bash",
+        "dev": "npm run dev:serve",
+        "dev:serve": "npm run docker:run -- --service-ports web /usr/local/bin/python ./manage.py runserver 0.0.0.0:8000",
+        "dev:migrate": "npm run docker:run -- web /usr/local/bin/python ./manage.py migrate"
+    }
+}

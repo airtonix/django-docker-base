@@ -1,0 +1,9 @@
+version: "3.0"
+
+services:
+  web:
+    image: ${npm_package_name}:${npm_package_version}
+    volumes:
+      - ./src:/usr/src/app
+    ports:
+      - '8000:8000'
