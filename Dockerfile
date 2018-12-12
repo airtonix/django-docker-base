@@ -1,14 +1,30 @@
-FROM python:3.4
+FROM python:3.6.6-alpine3.7 AS builder
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /usr/src/app/
 
-WORKDIR /usr/src/app
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
+RUN apk add --no-cache --virtual .build-deps \
+    build-base \
+    openjpeg-dev \
+    openssl-dev \
+    zlib-dev
+
+COPY requirements.txt .
+RUN pip install --user -r requirements.txt
+
+FROM python:3.6.6-alpine3.7 AS runner
+
+ENV PATH=$PATH:/root/.local/bin
+
+WORKDIR /usr/src/app/
+
+RUN apk add --no-cache --virtual .run-deps \
+    openjpeg \
+    openssl
+
+EXPOSE 8000/tcp
+
+COPY --from=builder /root/.local/ /root/.local/
 COPY . .
 
-EXPOSE 8000
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+EXPOSE 8000
