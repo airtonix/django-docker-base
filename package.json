@@ -4,9 +4,13 @@
     "scripts": {
         "docker:build": "docker-compose -f ./docker-compose--build.yml build web",
         "docker:run": "docker-compose run --rm",
-        "shell": "npm run docker:run -- web /bin/bash",
+        "shell": "npm run docker:run -- web /bin/sh",
         "dev": "npm run dev:serve",
-        "dev:serve": "npm run docker:run -- --service-ports web /usr/local/bin/python ./manage.py runserver 0.0.0.0:8000",
-        "dev:migrate": "npm run docker:run -- web /usr/local/bin/python ./manage.py migrate"
+        "dev:manage": "npm run docker:run -- web /usr/local/bin/python ./manage.py",
+        "dev:startapp": "npm run dev:manage -- startapp",
+        "dev:migrate": "npm run dev:manage -- migrate",
+        "dev:makemigrations": "npm run dev:manage -- makemigrations",
+        "dev:showmigrations": "npm run dev:manage -- showmigrations",
+        "dev:serve": "npm run docker:run -- --service-ports web /usr/local/bin/python ./manage.py runserver 0.0.0.0:8000"
     }
 }
